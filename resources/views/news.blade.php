@@ -1,4 +1,11 @@
-<button><a href="http://127.0.0.1:8000/add-new">Додати новину</a></button>
+<div style="display: grid; grid-template-columns: 1fr auto;">
+    <button><a href="http://127.0.0.1:8000/add-new">Додати новину</a></button>
+    @if(isset($email))
+        <div class="alert alert-info" style="justify-self: end;">
+            Користувач: {{ $email }}
+        </div>
+    @endif
+</div>
 <div class="all-news">
 @if($news != null && count($news) > 0)
 
@@ -13,7 +20,6 @@
 @endif
 
 </div>
-
 
 <style>
     .one-new
@@ -39,6 +45,7 @@
         padding: 10px 20px;
         cursor: pointer;
         border-radius: 5px;
+        width: 200px;
     }
     a
     {

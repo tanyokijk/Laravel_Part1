@@ -100,4 +100,10 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    'mailgun' => [
+        'transport' => 'mailgun',
+        // 'client' => [
+        //     'timeout' => 5,
+        // ],
+    ],
 ];

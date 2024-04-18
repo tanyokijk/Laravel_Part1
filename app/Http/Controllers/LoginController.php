@@ -10,16 +10,16 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 
-class addNewController extends Controller
+class LoginController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
     public function index(): View
     {
         //Mail::to('t.derevyanko1209@gmail.com')->send(new LogIn());
-        return view('addNew');
-
+        return view('loginView');
     }
 
     /**
@@ -35,13 +35,31 @@ class addNewController extends Controller
      */
     public function store(Request $request)
     {
-        $news = new News();
-        $news->summary = $request['header'];
-        $news->short_description = $request['short'];
-        $news->full_text = $request['article'];
-        $news->save();
+        if ($request->has('takeEmail'))
+        {
+            $user = new User();
+            $user->email = $request['email'];
+            $user->code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+            $user->save();
+            Mail::to($user->email)->send(new LogIn($user->code));
+            $request->session()->put('user', $user);
+            return view('loginView')->with('email', $request['email']);
+        }
+        elseif ($request->has('takeCode'))
+        {
+            $user = $request->session()->get('user');
+            if($user->code==$request['code'])
+            {
+                session(['email' => $user->email]);
+                return redirect('news')->with('email', $user->email);
+            }
+            else
+            {
+                return view('loginView')->with('message', "Неправильний код!");
+            }
+        }
 
-        return redirect('/news');
+
     }
 
     /**
