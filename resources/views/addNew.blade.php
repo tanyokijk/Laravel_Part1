@@ -17,31 +17,38 @@
             <textarea style="margin:0; height: 455px;width: 563px;" id="article" name="article" maxlength="5000">
             </textarea>
         </label>
-
     </div>
+
+    <div class="row-category">
+        <label for="category">Category:</label>
+        @if($categories != null && count($categories) > 0)
+            <select id="category" name="category">
+            @foreach($categories as $category)
+                <option value="{{$category['name']}}">{{$category['name']}}</option>
+            @endforeach
+            </select>
+        @else
+            <p>Поки немає категорій. Додайте</p>
+        @endif
+    </div>
+<br>
         <input type="submit" name="add" value="Add New">
 </form>
 
 <script>
-    // Function to validate input fields
     function validateInput(inputElement, maxLength) {
         const inputValue = inputElement.value;
 
-        // Check if input value length exceeds the maximum length
         if (inputValue.length > maxLength) {
-            // If exceeds, add error class
             inputElement.classList.add('error');
         } else {
-            // If within limit, remove error class
             inputElement.classList.remove('error');
         }
     }
 
-    // Get all input elements and add event listeners for input event
     const inputs = document.querySelectorAll('input, textarea');
     inputs.forEach(input => {
         input.addEventListener('input', function(event) {
-            // Call validateInput function for the current input field
             validateInput(event.target, parseInt(event.target.getAttribute('maxlength')));
         });
     });
@@ -73,5 +80,11 @@
         padding: 10px 20px;
         cursor: pointer;
         border-radius: 5px;
+    }
+    select {
+        padding: 10px;
+        border-radius: 20px;
+        border: 1px solid #ccc;
+        margin-right: 10px;
     }
 </style>

@@ -6,6 +6,7 @@ use App\Mail\LogIn;
 use App\Models\News;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
@@ -50,16 +51,15 @@ class LoginController extends Controller
             $user = $request->session()->get('user');
             if($user->code==$request['code'])
             {
-                session(['email' => $user->email]);
-                return redirect('news')->with('email', $user->email);
+                Auth::login($user);
+                return redirect('/')->with('email', $user->email);
             }
             else
             {
                 return view('loginView')->with('message', "Неправильний код!");
             }
         }
-
-
+        return false;
     }
 
     /**

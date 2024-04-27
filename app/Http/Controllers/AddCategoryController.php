@@ -2,24 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\LogIn;
+use App\Models\Categories;
+use App\Models\Category;
 use App\Models\News;
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\View\View;
-use Illuminate\Support\Facades\DB;
 
-class addNewController extends Controller
+class AddCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index()
     {
-        //Mail::to('t.derevyanko1209@gmail.com')->send(new LogIn());
-        return view('addNew');
-
+        return view('addCategory');
     }
 
     /**
@@ -35,19 +30,16 @@ class addNewController extends Controller
      */
     public function store(Request $request)
     {
-        $news = new News();
-        $news->summary = $request['header'];
-        $news->short_description = $request['short'];
-        $news->full_text = $request['article'];
-        $news->save();
-
-        return redirect('/news');
+        $category = new Category();
+        $category->name = $request['name'];
+        $category->save();
+        return redirect('/');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Categories $categories)
     {
         //
     }
@@ -55,7 +47,7 @@ class addNewController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Categories $categories)
     {
         //
     }
@@ -63,7 +55,7 @@ class addNewController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Categories $categories)
     {
         //
     }
@@ -71,7 +63,7 @@ class addNewController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Categories $categories)
     {
         //
     }

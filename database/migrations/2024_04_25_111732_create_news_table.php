@@ -16,7 +16,11 @@ return new class extends Migration
             $table->string('summary');
             $table->string('short_description');
             $table->string('full_text');
+            $table->unsignedBigInteger('category_id');
             $table->timestamps();
+        });
+        Schema::table('news', function (Blueprint $table) {
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 

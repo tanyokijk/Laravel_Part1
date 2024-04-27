@@ -1,15 +1,24 @@
 <?php
 
+use App\Http\Controllers\AddCategoryController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\NewController;
+use App\Models\Category;
 use App\Models\News;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/news', function () {
-    $email = session('email');
-    return view('news', ['email' => $email, 'news' => News::all()]);
-});
+Route::get('/', [NewController::class, 'index'])->name('news.index');
+Route::get('/news/{id}', [NewController::class, 'show'])->name('news.show');
+Route::get('/add-new', [NewController::class, 'create']);
+Route::post('/add-new', [NewController::class, 'store']);
 
-Route::get('/add-new', [\App\Http\Controllers\addNewController::class, 'index']);
-Route::post('/add-new', [\App\Http\Controllers\addNewController::class, 'store']);
+Route::get('/add-category', [AddCategoryController::class, 'index']);
+Route::post('/add-category', [AddCategoryController::class, 'store']);
 
-Route::get('/', [\App\Http\Controllers\LoginController::class, 'index']);
-Route::post('/', [\App\Http\Controllers\LoginController::class, 'store']);
+Route::get('/login', [LoginController::class, 'index']);
+Route::post('/login', [LoginController::class, 'store']);
+
+Route::post('/news/{id}', [CommentController::class, 'store']);
+
+

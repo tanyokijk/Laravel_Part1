@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class User extends \Illuminate\Foundation\Auth\User
 {
-    use HasFactory;
+    use HasFactory, Authenticatable;
     /**
      * The attributes that are mass assignable.
      *
