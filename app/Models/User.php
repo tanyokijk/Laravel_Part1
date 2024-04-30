@@ -2,20 +2,64 @@
 
 namespace App\Models;
 
-use Illuminate\Auth\Authenticatable;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class User extends \Illuminate\Foundation\Auth\User
+use Illuminate\Support\Facades\Auth;
+
+use function Laravel\Prompts\password;
+
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Authenticatable;
+    use HasFactory, Notifiable;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
+        'name',
         'email',
-        'code',
+        'password',
     ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+    protected function isAdmin()
+    {
+        if($this->role()->name === 'admin')
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 }

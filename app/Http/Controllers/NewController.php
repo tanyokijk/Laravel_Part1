@@ -40,7 +40,7 @@ class NewController extends Controller
 
             $news = $query->get();
 
-            return view('news', ['email' => $user['email'], 'news' => $news, 'categories' => Category::all()]);
+            return view('dashboard', ['email' => $user['email'], 'news' => $news, 'categories' => Category::all()]);
         } else {
             $query = News::query();
 
@@ -81,6 +81,7 @@ class NewController extends Controller
         $news->full_text = $request['article'];
         $category = Category::where('name', $request['category'])->firstOrFail();
         $news->category_id = $category->id;
+        $news->user_id=Auth::user()['id'];
         $news->save();
 
         return redirect('/');
@@ -89,15 +90,15 @@ class NewController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(News $news)
     {
-        $news = News::findOrFail($id);
+        //$news = News::findOrFail($id);
         $isLoggedIn = Auth::check();
         return view('one-new', [
             'news' => $news,
             'category' => Category::where('id', $news['category_id'])->firstOrFail(),
             'isLoggedIn' => $isLoggedIn,
-            'comments' => Comment::where('news_id', $id)->get(),
+            'comments' => Comment::where('news_id', $news['id'])->get(),
         ]);
     }
 
@@ -106,7 +107,7 @@ class NewController extends Controller
      */
     public function edit(News $news)
     {
-        //
+        return view('edit-new', ['news' => $news]);
     }
 
     /**
@@ -114,7 +115,22 @@ class NewController extends Controller
      */
     public function update(Request $request, News $news)
     {
-        //
+        $request->validate([
+            'summary' => ['required', 'string', 'max:255'],
+            'short_description' => ['required', 'string', 'max:255'],
+            'full_text' => ['required', 'string'],
+            'category_id' => ['required', 'integer', 'exists:categories,id'],
+        ]);
+
+        // Оновлення даних новини
+        $news->update([
+            'summary' => $request->summary,
+            'short_description' => $request->short_description,
+            'full_text' => $request->full_text,
+            'category_id' => $request->category_id,
+        ]);
+
+        return redirect()->route('crud');
     }
 
     /**
@@ -122,6 +138,7 @@ class NewController extends Controller
      */
     public function destroy(News $news)
     {
-        //
+        $news->delete();
+        return redirect()->route('crud');
     }
 }

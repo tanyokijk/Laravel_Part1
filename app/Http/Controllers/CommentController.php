@@ -33,8 +33,8 @@ class CommentController extends Controller
     {
         $comment = new Comment();
         $comment->text = $request['text'];
-        $comment->user_id = Auth::user()['id'];
-        $comment->news_id= $request->route('id');
+        $comment->user_id = $request->user()['id'];
+        $comment->news_id = $request->route('news');
         $comment->save();
 
         return back();
@@ -53,7 +53,7 @@ class CommentController extends Controller
      */
     public function edit(Comment $comment)
     {
-        //
+        return view('edit-comment', ['comment' => $comment]);
     }
 
     /**
@@ -61,7 +61,16 @@ class CommentController extends Controller
      */
     public function update(Request $request, Comment $comment)
     {
-        //
+        $request->validate([
+            'text' => ['required', 'string'],
+        ]);
+
+        // Оновлення даних новини
+        $comment->update([
+            'text' => $request->text,
+        ]);
+
+        return redirect()->route('crud-comment');
     }
 
     /**
@@ -69,6 +78,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        //
+        $comment->delete();
+        return redirect()->route('crud-comment');
     }
 }

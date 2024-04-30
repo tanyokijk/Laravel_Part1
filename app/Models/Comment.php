@@ -15,6 +15,7 @@ class Comment extends Model
      * @var string|null
      */
     protected $userEmail;
+    protected $fillable = ['text'];
 
     /**
      * Отримати email користувача, що написав коментар.

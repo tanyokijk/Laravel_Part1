@@ -1,12 +1,5 @@
 <div class="container">
     <div>
-        <a href="http://127.0.0.1:8000/add-new">
-            <button>Додати новину</button>
-        </a>
-
-        <a href="http://127.0.0.1:8000/add-category">
-            <button>Додати категорію</button>
-        </a>
 
         @if(isset($email))
             <div class="alert alert-info" style="justify-self: end;">
@@ -14,7 +7,10 @@
             </div>
         @else
             <a href="http://127.0.0.1:8000/login">
-                <button>Зареєструватися</button>
+                <button>{{__('messages.Log in')}}</button>
+            </a>
+            <a href="http://127.0.0.1:8000/register">
+                <button>{{__('messages.Sign up')}}</button>
             </a>
         @endif
     </div>
@@ -22,7 +18,7 @@
     <div id="search">
         <form action="{{url('/')}}" method="GET">
             <div class="row-header">
-                <input type="text" name="summary" placeholder="Header">
+                <input type="text" name="summary" placeholder="{{__('messages.Summary')}}">
             </div>
             <div class="row-category">
                 @if($categories != null && count($categories) > 0)
@@ -33,11 +29,11 @@
                         @endforeach
                     </select>
                 @else
-                    <p class="no-categories">Поки немає категорій. Додайте</p>
+                    <p class="no-categories">{{__('messages.No categories yet')}}</p>
                 @endif
             </div>
 
-            <input type="submit" name="add" value="Пошук">
+            <input type="submit" name="add" value="{{__('messages.Search')}}">
         </form>
     </div>
 </div>
@@ -45,7 +41,7 @@
 @if($news != null && count($news) > 0)
 
     @foreach($news as $new)
-            <a href="{{ route('news.show', ['id' => $new->id]) }}" class="one-new">
+            <a href="{{ route('news.show', ['news' => $new]) }}" class="one-new">
                 <div>
                     <h2>{{ $new->summary }}</h2>
                     <p>{{ $new->short_description }}</p>
@@ -53,7 +49,7 @@
             </a>
     @endforeach
 @else
-    <h1>Поки немає новин.</h1>
+    <h1>{{__('messages.No news yet')}}</h1>
 @endif
 
 </div>
